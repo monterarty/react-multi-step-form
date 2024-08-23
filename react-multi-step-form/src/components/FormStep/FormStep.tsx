@@ -3,20 +3,27 @@ import FormField from '../FormField/FormField.tsx';
 import { Step } from '../../types/formTypes.ts';
 import { useState } from 'react';
 
-interface DynamicProps {
+interface FormStepProps {
   step: Step;
+  onStepValidationChange: (isStepValid: boolean) => void;
 }
 
-const FormStep: React.FC<DynamicProps> = ({ step }) => {
-  const [fields, setFields] = useState(step.fields);
-  const handleFieldValidChange = (MIGX_id: string, valid: boolean) => {
-    setFields(
-      (prevFields) =>
-        prevFields &&
-        prevFields.map((field) =>
-          field.MIGX_id === MIGX_id ? { ...field, valid: valid } : field
-        )
+const FormStep: React.FC<FormStepProps> = ({
+  step,
+  onStepValidationChange,
+}) => {
+  const [fieldValidity, setFieldValidity] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const handleFieldChange = (id: string, isValid: boolean) => {
+    const updatedValidity = { ...fieldValidity, [id]: isValid };
+    setFieldValidity(updatedValidity);
+
+    const allFieldsValid = Object.values(updatedValidity).every(
+      (valid) => valid
     );
+    onStepValidationChange(allFieldsValid);
   };
 
   if (step.type == 'product_form_step_standart') {
@@ -24,12 +31,12 @@ const FormStep: React.FC<DynamicProps> = ({ step }) => {
       <div className="step flex flex-col grow">
         <div className="flex items-start grow mb-24">
           <div className="grid grid-cols-2 gap-8 w-full xs--flex-col">
-            {fields &&
-              fields.map((field) => (
+            {step.fields &&
+              step.fields.map((field) => (
                 <FormField
                   key={field.MIGX_id}
                   field={field}
-                  onFieldValidChange={handleFieldValidChange}
+                  onFieldValidChange={handleFieldChange}
                 />
               ))}
           </div>

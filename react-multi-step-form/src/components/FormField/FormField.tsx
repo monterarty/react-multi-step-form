@@ -2,6 +2,7 @@ import React from 'react';
 import { Field } from '../../types/formTypes.ts';
 import { useRef, useState, useEffect } from 'react';
 import { IMask, IMaskInput } from 'react-imask';
+import { useTranslation } from 'react-i18next';
 
 interface FormFieldProps {
   field: Field;
@@ -57,8 +58,8 @@ const FormField: React.FC<FormFieldProps> = ({ field, onFieldValidChange }) => {
   const inputRef = useRef<IMaskInputElement | HTMLInputElement | null>(null);
   const [valid, setValid] = useState(!field.required);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
   const attributes = getFieldAttributes(field.type);
-  const lang = (document.documentElement.lang || 'ru') as 'ru' | 'uz';
   const emailPattern = /^[^@]+@[^@]+\.[^@]{2,}$/;
   const operatorCodes = [
     '20',
@@ -158,7 +159,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, onFieldValidChange }) => {
           break;
       }
       if (errorKey) {
-        setError(errors[errorKey as keyof typeof errors][lang]);
+        setError(t(`form.errors.${errorKey}`));
         setValid(false);
       } else {
         setError('');
@@ -222,34 +223,6 @@ const FormField: React.FC<FormFieldProps> = ({ field, onFieldValidChange }) => {
     setError('');
   }
 
-  const errors: { [key: string]: { ru: string; uz: string } } = {
-    text_short: {
-      ru: 'Минимум — 1 символ',
-      uz: 'Kamida 1 ta belgidan iborat bo‘lishi kerak',
-    },
-    text_long: {
-      ru: 'Максимум — 49 символов',
-      uz: 'Ko‘pi bilan 49 ta belgidan iborat bo‘lishi kerak',
-    },
-    name: { ru: 'Укажите имя', uz: 'Ismingizni kiriting' },
-    surname: { ru: 'Укажите фамилию', uz: 'Familiyangizni kiriting' },
-    phone_short: {
-      ru: 'Номер телефона должен состоять из 12 цифр',
-      uz: 'Telefon raqami 12 ta raqamdan iborat bo‘lishi kerak',
-    },
-    phone_unvalid: {
-      ru: 'Проверьте код оператора',
-      uz: 'Operator kodini tekshiring',
-    },
-    email: {
-      ru: 'Проверьте адрес электронной почты',
-      uz: 'Elektron pochta manzilini tekshiring',
-    },
-    checkbox: {
-      ru: 'Поле обязательно для заполнения',
-      uz: 'Maydonni to‘ldirish majburiy',
-    },
-  };
   return (
     <>
       <div className="input-wrapper grow is--hidden-label col-span-1 xs--col-span-2 xs--w-full">

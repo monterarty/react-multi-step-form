@@ -3,29 +3,29 @@ import ProgressBar from './ProgressBar/ProgressBar.tsx';
 import FormStep from './FormStep/FormStep.tsx';
 import FormSuccess from './FormSuccess/FormSuccess.tsx';
 import { JsonField, Field, Step } from '../types/formTypes.ts';
+import '../i18n.js';
+import { useTranslation } from 'react-i18next';
 
 const MultiStepForm: React.FC = () => {
   const [stepsData, setStepsData] = useState<Step[]>([]);
   const [stepsLength, setStepsLength] = useState<number>(0);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [stepsValidity, setStepsValidity] = useState<boolean[]>([]);
   const [loading, setLoading] = useState(true); // Состояние загрузки
+  const { t } = useTranslation();
 
   const showStep = (step: number) => {
     setCurrentStep(step);
   };
 
+  const handleStepValidationChange = (isStepValid: boolean) => {
+    const updatedStepsValidity = [...stepsValidity];
+    updatedStepsValidity[currentStep] = isStepValid;
+    setStepsValidity(updatedStepsValidity);
+  };
+
   const goToNextStep = () => {
-    const currentStepData = stepsData[currentStep];
-    const allFieldsValid = currentStepData.fields.every((field) => {
-      // Здесь должна быть логика проверки валидности каждого поля.
-      // Например, если вы сохраняете валидность полей в локальном состоянии каждого поля,
-      // можно проверять его таким образом.
-      return field.valid; // isValid - это флаг валидности, который нужно добавить в состояние поля.
-    });
-
-    console.log(currentStepData.fields);
-
-    if (allFieldsValid) {
+    if (stepsValidity) {
       setCurrentStep((prevStep) => prevStep + 1);
     } else {
       alert('Пожалуйста, заполните все поля правильно.');
@@ -95,16 +95,16 @@ const MultiStepForm: React.FC = () => {
         <FormStep
           key={stepsData[currentStep].MIGX_id}
           step={stepsData[currentStep]}
+          onStepValidationChange={handleStepValidationChange}
         />
         <div className="flex justify-between items-end xs--flex-col">
           {currentStep > 0 && (
-            <a
-              href="#"
+            <div
               onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
               className="next button w-inline-block is--secondary xs--w-full"
             >
-              <span>Назад</span>
-            </a>
+              <span>{t('form.controls.prev')}</span>
+            </div>
           )}
           {currentStep === 0 && (
             <>
@@ -134,13 +134,12 @@ const MultiStepForm: React.FC = () => {
                   ></span>
                 </div>
               </div>
-              <a
-                href="#"
+              <div
                 onClick={goToNextStep}
                 className="next button w-inline-block is--secondary xs--w-full"
               >
-                <span>Далее</span>
-              </a>
+                <span>{t('form.controls.next')}</span>
+              </div>
             </>
           )}
         </div>
@@ -151,23 +150,3 @@ const MultiStepForm: React.FC = () => {
 };
 
 export default MultiStepForm;
-/*<div className="flex justify-between">
-  {currentStep > 0 && (
-    <button
-      type="button"
-      onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-      className="prev button w-inline-block is--secondary xs--w-full"
-    >
-      Назад
-    </button>
-  )}
-  {currentStep < stepsLength - 1 && (
-    <button
-      type="button"
-      onClick={goToNextStep}
-      className="next button w-inline-block is--secondary xs--w-full"
-    >
-      Далее
-    </button>
-  )}
-</div>*/

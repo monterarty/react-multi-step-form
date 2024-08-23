@@ -1,0 +1,19 @@
+{
+    "form": {
+        "controls": {
+            "next": "Keyingisi",
+            "prev": "Orqaga",
+            "submit": "Yuborish"
+        },
+        "errors": {
+            "text_short": "Kamida 1 ta belgidan iborat bo‘lishi kerak",
+            "text_long": "Ko‘pi bilan 49 ta belgidan iborat bo‘lishi kerak",
+            "name": "Ismingizni kiriting",
+            "surname": "Familiyangizni kiriting",
+            "phone_short": "Telefon raqami 12 ta raqamdan iborat bo‘lishi kerak",
+            "phone_unvalid": "Operator kodini tekshiring",
+            "email": "Elektron pochta manzilini tekshiring",
+            "checkbox": "Maydonni to‘ldirish majburiy"
+        }
+    }
+}

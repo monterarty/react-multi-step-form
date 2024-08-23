@@ -7,14 +7,13 @@ interface ProgressBarProps {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ data }) => {
   const stepsLength = data.length;
-  const currentStep: number = 1;
+  const currentStep: number = 0;
   return (
     <div className="my-24 progress">
       <div className="flex items-center justify-between mb-12 xs--flex-col xs--items-start">
         <div className="xs--mb-4">
           <span className="font-medium">Шаг&nbsp;{currentStep + 1}</span>{' '}
-          из&nbsp;
-          {stepsLength}. {data[currentStep]?.title}
+          из&nbsp;{stepsLength}. {data[currentStep]?.title}
         </div>
         <div className="text-gray text-size-s">
           <span data-step-weight="" className="text-green">
